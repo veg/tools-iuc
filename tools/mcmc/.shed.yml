@@ -1,0 +1,9 @@
+name: mcmc
+owner: iuc
+description: Call variants
+long_description: Call variants using a multinomial model sampled by MCMC
+remote_repository_url: https://github.com/galaxyproject/tools-iuc/tree/master/tools/qfilt
+homepage_url: https://github.com/veg/qfilt
+type: unrestricted
+categories:
+ - Variant Analysis

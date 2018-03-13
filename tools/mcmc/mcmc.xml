@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<tool id="mcmc" version="@VERSION@" name="Call variants">
+    <description>using a multinomial model sampled by MCMC</description>
+    <requirements>
+        <requirement type="package" version="0.6.1">julia</requirement>
+    </requirements>
+    <command detect_errors="exit_code">
+    <![CDATA[
+        julia $__tool_directory__/mcmc.jl
+            --grid-density $grid_density
+            --chain-length $chain_length
+            --burnin-fraction $burnin_fraction
+            --target-rate $target_rate
+            --posterior-threshold $posterior_threshold
+            --json-report '$output_json'
+            msa '$input'
+    ]]>
+    </command>
+    <inputs>
+        <param name="input" argument="msa" type="data" format="fasta" label="Input MSA in FASTA format" />
+        <param name="grid_density" argument="--grid-density" type="integer" value="10" label="Grid density" />
+        <param name="chain_length" argument="--chain-length" type="integer" value="2000000" label="Chain length" />
+        <param name="burnin_fraction" argument="--burnin-fraction" type="float" value="0.5" label="Burn-in fraction" />
+        <param name="target_rate" argument="--target-rate" type="float" value="0.01" label="Target rate" />
+        <param name="posterior_threshold" argument="--posterior-threshold" type="float" value="0.95" label="Posterior threshold" />
+    </inputs>
+    <outputs>
+        <data name="output_json" format="json" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" ftype="fasta" value="mcmc-in1.fa" />
+            <output name="output_json" file="mcmc-out1.json" />
+        </test>
+        <test>
+            <param name="input" ftype="fasta" value="mcmc-in2.fa" />
+            <output name="output_json" file="mcmc-out2.json" />
+        </test>
+    </tests>
+    <help>Calls variants using a multinomial model.</help>
+    <citations>
+        <citation type="bibtex">
+            @UNPUBLISHED{spond,
+                author = "Sergei Kosakovsky Pond",
+                title = "HyPhy: Hypothesis Testing using Phylogenies",
+                year = "2000",
+                note = "http://hyphy.org/",
+                url = "http://hyphy.org/"}
+        </citation>
+    </citations>
+</tool>
