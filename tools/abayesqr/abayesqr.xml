@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<tool id="abayesqr" name="aBayesQR" version="1.0.0">
+    <description>for haplotype reconstruction</description>
+    <requirements>
+        <requirement type="package" version="1.0.0">abayesqr</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        ln -s '$reference' input.fasta &&
+        ln -s '$input' input.sam &&
+        aBayesQR $abayes_params &&
+        python '$__tool_directory__/parse_output.py'
+        ]]>
+    </command>
+    <configfiles>
+        <configfile name="abayes_params"><![CDATA[filename of reference sequence (FASTA) : input.fasta
+filname of the aligned reads (sam format) : input.sam
+paired-end (1 = true, 0 = false) : $paired
+SNV_thres : $snv
+reconstruction_start : $start
+reconstruction_stop: $stop
+min_mapping_qual : $qual
+min_read_length : $readlength
+max_insert_length : $insertlength
+characteristic zone name : test
+seq_err (assumed sequencing error rate(%)) : $seq_err
+MEC improvement threshold : $mec_threshold
+]]></configfile>
+    </configfiles>
+    <inputs>
+        <param name="input" type="data" format="sam" label="Input reads in SAM format" />
+        <param name="reference" type="data" format="fasta" label="Reference genome" />
+        <param name="paired" type="boolean" truevalue="1" falsevalue="0" label="Paired reads" />
+        <param name="snv" type="float" value="0.01" label="SNV threshold" />
+        <param name="start" type="integer" value="1" label="Reconstruction start" />
+        <param name="stop" type="integer" value="1300" label="Reconstruction stop" />
+        <param name="qual" type="integer" value="60" label="Minimum mapping quality" />
+        <param name="readlength" type="integer" value="150" label="Minimum read length" />
+        <param name="insertlength" type="integer" value="250" label="Maximum insert length" />
+        <param name="seq_err" type="float" value="0.1" label="Sequencing error rate" />
+        <param name="mec_threshold" type="float" value="0.0395" label="MEC improvement threshold" />
+    </inputs>
+    <outputs>
+        <data name="haplotypes" from_work_dir="haplotypes.fasta" format="fasta" label="${tool.name} on ${on_string} - Haplotypes" />
+    </outputs>
+    <tests>
+        <test>
+            <param name="input" ftype="sam" value="test-data/simulated.sam" />
+            <param name="reference" ftype="fasta" value="test-data/pol.fasta" />
+            <output name="haplotypes" file="test-data/haplotypes.fasta" />
+        </test>
+    </tests>
+    <help>
+    </help>
+    <citations>
+        <citation type="doi">10.1089/cmb.2017.0249</citation>
+    </citations>
+</tool>
